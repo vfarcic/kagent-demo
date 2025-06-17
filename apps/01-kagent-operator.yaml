@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: ghcr.io/kagent-dev/kagent/helm/kagent
+    repoURL: ghcr.io/kagent-dev/kagent/helm
     chart: kagent
     targetRevision: "*"
   destination:
