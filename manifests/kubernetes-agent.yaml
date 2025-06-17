@@ -1,0 +1,86 @@
+apiVersion: kagent.dev/v1alpha1
+kind: Agent
+metadata:
+  name: kubernetes
+  namespace: kagent
+spec:
+  description: Kubernetes agent
+  modelConfig: anthropic-claude-3-7-sonnet-20250219
+  systemMessage: |
+    You're a helpful agent, made by the kagent team.
+
+    # Instructions
+        - If user question is unclear, ask for clarification before running any tools
+        - Always be helpful and friendly
+        - If you don't know how to answer the question DO NOT make things up, tell the user "Sorry, I don't know how to answer that" and ask them to clarify the question further
+        - If you are unable to help, or something goes wrong, refer the user to https://kagent.dev for more information or support.
+        - You can provide information about the state of a Kubernetes cluster and perform operations in the cluster.
+        - You provide answers or perform operations only if none of the more specialized agents is available. For example, if you are asked to interact with Helm charts, you'll do that only if there is no agent specialized in such operations.
+
+    # Response format:
+        - ALWAYS format your response as Markdown
+        - Your response will include a summary of actions you took and an explanation of the result
+        - If you created any artifacts such as files or resources, you will include those in your response as well
+  tools:
+  - type: Builtin
+    builtin:
+      name: kagent.tools.k8s.AnnotateResource
+  - type: Builtin
+    builtin:
+      name: kagent.tools.k8s.ApplyManifest
+  - type: Builtin
+    builtin:
+      name: kagent.tools.k8s.CheckServiceConnectivity
+  - type: Builtin
+    builtin:
+      name: kagent.tools.k8s.CreateResource
+  - type: Builtin
+    builtin:
+      name: kagent.tools.k8s.CreateResourceFromUrl
+  - type: Builtin
+    builtin:
+      name: kagent.tools.k8s.DeleteResource
+  - type: Builtin
+    builtin:
+      name: kagent.tools.k8s.DescribeResource
+  - type: Builtin
+    builtin:
+      name: kagent.tools.k8s.ExecuteCommand
+  - type: Builtin
+    builtin:
+      name: kagent.tools.k8s.GenerateResourceTool
+      config:
+        model_client: '{"component_type":"model","component_version":"1","config":"{}","description":"A description of the model","label":"<YourLabelHere>","provider":"<YourProviderHere","version":"1"}'
+  - type: Builtin
+    builtin:
+      name: kagent.tools.k8s.GetAvailableAPIResources
+  - type: Builtin
+    builtin:
+      name: kagent.tools.k8s.GetClusterConfiguration
+  - type: Builtin
+    builtin:
+      name: kagent.tools.k8s.GetEvents
+  - type: Builtin
+    builtin:
+      name: kagent.tools.k8s.GetPodLogs
+  - type: Builtin
+    builtin:
+      name: kagent.tools.k8s.GetResources
+  - type: Builtin
+    builtin:
+      name: kagent.tools.k8s.GetResourceYAML
+  - type: Builtin
+    builtin:
+      name: kagent.tools.k8s.LabelResource
+  - type: Builtin
+    builtin:
+      name: kagent.tools.k8s.PatchResource
+  - type: Builtin
+    builtin:
+      name: kagent.tools.k8s.RemoveAnnotation
+  - type: Builtin
+    builtin:
+      name: kagent.tools.k8s.Rollout
+  - type: Builtin
+    builtin:
+      name: kagent.tools.k8s.Scale
