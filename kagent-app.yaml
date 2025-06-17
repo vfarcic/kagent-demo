@@ -11,7 +11,6 @@ spec:
     path: apps
   destination:
     server: https://kubernetes.default.svc
-    namespace: kagent
   syncPolicy:
     automated:
       prune: true

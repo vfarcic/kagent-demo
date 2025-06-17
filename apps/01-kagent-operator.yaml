@@ -11,10 +11,6 @@ spec:
     repoURL: ghcr.io/kagent-dev/kagent/helm/kagent
     chart: kagent
     targetRevision: "*"
-    helm:
-      parameters:
-      - name: providers.anthropic.apiKey
-        value: "${ANTHROPIC_API_KEY}"
   destination:
     server: https://kubernetes.default.svc
     namespace: kagent
