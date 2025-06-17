@@ -61,7 +61,7 @@ else
   yq eval '.spec.source.repoURL = env(REPO_URL)' -i apps-app.yaml
   yq eval '.spec.source.repoURL = env(REPO_URL)' -i bootstrap/00-kagent-crds.yaml
   yq eval '.spec.source.repoURL = env(REPO_URL)' -i bootstrap/01-kagent-operator.yaml
-  yq eval '.spec.source.repoURL = env(REPO_URL)' -i bootstrap/02-kagent-resources.yaml
+  yq eval '.spec.source.repoURL = env(REPO_URL)' -i bootstrap/02-manifests.yaml
 fi
 kubectl apply --filename apps-app.yaml
 
