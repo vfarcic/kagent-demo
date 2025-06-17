@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kagent-demo
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/vfarcic/kagent-demo.git
+    targetRevision: HEAD
+    path: bootstrap
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

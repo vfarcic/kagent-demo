@@ -11,6 +11,12 @@ spec:
     repoURL: ghcr.io/kagent-dev/kagent/helm
     chart: kagent
     targetRevision: "*"
+    helm:
+      values: |
+        providers:
+          anthropic:
+            apiKeySecretRef: anthropic-claude-3-7-sonnet-20250219
+            apiKeySecretKey: ANTHROPIC_API_KEY
   destination:
     server: https://kubernetes.default.svc
     namespace: kagent

@@ -55,12 +55,15 @@ kubectl create secret generic anthropic-claude-3-7-sonnet-20250219 \
 echo "Creating Argo CD Application..."
 export REPO_URL=$(git remote get-url origin)
 if [ -z "$REPO_URL" ]; then
-  echo "Warning: No git remote found. Please update repoURL in kagent-app.yaml manually."
+  echo "Warning: No git remote found. Please update repoURL in apps-app.yaml manually."
 else
   echo "Using git remote URL: $REPO_URL"
-  yq eval '.spec.source.repoURL = env(REPO_URL)' -i kagent-app.yaml
+  yq eval '.spec.source.repoURL = env(REPO_URL)' -i apps-app.yaml
+  yq eval '.spec.source.repoURL = env(REPO_URL)' -i bootstrap/00-kagent-crds.yaml
+  yq eval '.spec.source.repoURL = env(REPO_URL)' -i bootstrap/01-kagent-operator.yaml
+  yq eval '.spec.source.repoURL = env(REPO_URL)' -i bootstrap/02-kagent-resources.yaml
 fi
-kubectl apply --filename kagent-app.yaml
+kubectl apply --filename apps-app.yaml
 
 echo "Setup complete!"
 echo ""
