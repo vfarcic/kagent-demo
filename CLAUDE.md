@@ -8,56 +8,75 @@ This is a **kagent demo project** that sets up kagent (AI agents for Kubernetes)
 
 ## What We've Accomplished
 
-### 1. **Kagent Installation Setup**
-- Created `setup.sh` script for automated kagent installation
+### 1. **GitOps Setup with Kind and Argo CD** ✅ COMPLETE
+- Created `setup.sh` script for automated cluster and GitOps setup
+- Creates Kind cluster with local kubeconfig (`kubeconfig.yaml`)
+- Installs NGINX Ingress Controller for local access
+- Installs Argo CD with HTTP ingress via `nip.io`
+- Prompts user for Anthropic API key and creates secret automatically
 - Uses full argument names (e.g., `--namespace` instead of `-n`) per user preference
-- Installs kagent CRDs and main chart via Helm
-- Sets up Anthropic API key secret
 
-### 2. **Context7 MCP Integration** ✅ WORKING
-- **File**: `manifests/context7-toolserver.yaml`
+### 2. **GitOps Application Structure** ✅ COMPLETE
+- **Directory**: `apps/` - Contains all Kubernetes manifests managed by Argo CD
+- **File**: `apps/kagent-app.yaml` - Argo CD Application pointing to this repo
+- **Ingress**: Both Argo CD and kagent accessible via HTTP ingress
+- **Access URLs**:
+  - Argo CD: `http://argocd.127.0.0.1.nip.io`
+  - Kagent: `http://kagent.127.0.0.1.nip.io`
+
+### 3. **Context7 MCP Integration** ✅ WORKING
+- **File**: `apps/context7-toolserver.yaml` (moved from manifests/)
 - **Status**: Successfully deployed and tested
 - **Tools Available**: 
   - `resolve-library-id` - Resolves library names to Context7 IDs
   - `get-library-docs` - Fetches up-to-date documentation
 - **Command**: `npx --yes @upstash/context7-mcp`
 
-### 3. **Custom Agents Created**
+### 4. **Custom Agents Created**
 
 #### Generic Agent (Orchestrator)
-- **File**: `manifests/generic-agent.yaml`
+- **File**: `apps/generic-agent.yaml` (moved from manifests/)
 - **Role**: Main orchestrator that delegates to specialized agents
 - **Key Feature**: **MUST use Context7 first** for any technology/library questions
 - **Tools**: Context7 MCP + kubernetes agent + helm agent
 - **System Message**: Prioritizes Context7 for up-to-date documentation over training data
 
 #### Kubernetes Agent
-- **File**: `manifests/kubernetes-agent.yaml`
+- **File**: `apps/kubernetes-agent.yaml` (moved from manifests/)
 - **Role**: Kubernetes cluster operations
 - **Tools**: All kagent K8s builtin tools (GetResources, ApplyManifest, etc.)
 
 #### Helm Agent
-- **File**: `manifests/helm-agent.yaml`
+- **File**: `apps/helm-agent.yaml` (moved from manifests/)
 - **Role**: Helm chart operations
 - **Tools**: Helm builtin tools (ListReleases, Upgrade, etc.)
 
-### 4. **Model Configuration**
-- **File**: `manifests/model-config.yaml`
+### 5. **Model Configuration**
+- **File**: `apps/model-config.yaml` (moved from manifests/)
 - **Model**: `anthropic-claude-3-7-sonnet-20250219`
 - **Provider**: Anthropic
 - **Secret**: `anthropic-claude-3-7-sonnet-20250219`
 
-### 5. **Development Environment**
+### 6. **Ingress Configuration** ✅ COMPLETE
+- **File**: `apps/argocd-ingress.yaml` - Argo CD HTTP ingress
+- **File**: `apps/argocd-server-patch.yaml` - Configures Argo CD for insecure HTTP
+- **File**: `apps/kagent-ingress.yaml` - Kagent HTTP ingress
+- **NGINX Ingress**: Installed with Kind-specific configuration
+- **Access**: Both services accessible via `nip.io` domains
+
+### 7. **Development Environment**
 - **Devbox**: `devbox.json` and `devbox.lock` for consistent dev environment
 - **Git**: `.gitignore` created to exclude sensitive `kubeconfig.yaml`
 
 ## Current State
 
 ### ✅ Working Features
+- **GitOps Setup**: Fully automated cluster creation with Kind, Argo CD, and NGINX Ingress
 - **Context7 MCP Server**: Deployed and discovering tools correctly
 - **Generic Agent**: Successfully uses Context7 tools for library documentation (tested with React useState)
 - **Agent Communication**: Generic agent properly delegates to kubernetes/helm agents
-- **Setup Script**: Ready for production deployment
+- **Web Access**: Both Argo CD and kagent accessible via HTTP ingress
+- **Setup Script**: Complete GitOps workflow with user-friendly API key input
 
 ### 🔧 Technical Details
 - **Kagent CLI Issue**: `--stream` flag causes JSON parsing crashes, use without streaming
@@ -85,13 +104,17 @@ kagent invoke --agent generic --task /tmp/task.txt
 ## File Structure
 ```
 kagent-demo/
-├── setup.sh                           # Main installation script
-├── manifests/
+├── setup.sh                           # GitOps installation script
+├── apps/                               # Argo CD managed manifests
+│   ├── kagent-app.yaml                 # Argo CD Application
 │   ├── context7-toolserver.yaml       # Context7 MCP server
 │   ├── generic-agent.yaml             # Orchestrator agent
 │   ├── kubernetes-agent.yaml          # K8s operations agent
 │   ├── helm-agent.yaml                # Helm operations agent
-│   └── model-config.yaml              # Anthropic model config
+│   ├── model-config.yaml              # Anthropic model config
+│   ├── argocd-ingress.yaml             # Argo CD HTTP ingress
+│   ├── argocd-server-patch.yaml       # Argo CD insecure config
+│   └── kagent-ingress.yaml             # Kagent HTTP ingress
 ├── .gitignore                          # Excludes kubeconfig.yaml
 ├── devbox.json                        # Dev environment
 ├── devbox.lock                        # Dev environment lock
@@ -101,10 +124,12 @@ kagent-demo/
 
 ## Key Learnings
 
-1. **Context7 Integration**: Works perfectly when properly configured with explicit tool names
-2. **Agent Prompting**: Strong mandatory language required to ensure tool usage over training data
-3. **Kagent CLI**: Streaming mode has bugs, use non-streaming for reliability
-4. **System Architecture**: Generic orchestrator + specialized agents pattern works well
+1. **GitOps Approach**: Moving from imperative setup to declarative GitOps significantly improves maintainability
+2. **Context7 Integration**: Works perfectly when properly configured with explicit tool names
+3. **Agent Prompting**: Strong mandatory language required to ensure tool usage over training data
+4. **Kagent CLI**: Streaming mode has bugs, use non-streaming for reliability
+5. **System Architecture**: Generic orchestrator + specialized agents pattern works well
+6. **Ingress with nip.io**: HTTP-only ingress with nip.io domains provides easy local access without TLS complexity
 
 ## User Preferences
 
