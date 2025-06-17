@@ -4,18 +4,22 @@ set -e
 
 echo "Setting up kagent demo with GitOps approach..."
 
-# Prompt for Anthropic API key
-echo "Please enter your Anthropic API key:"
-read -s ANTHROPIC_API_KEY
-
+# Get Anthropic API key (from env var or prompt)
 if [ -z "$ANTHROPIC_API_KEY" ]; then
-  echo "Error: API key is required"
-  exit 1
+  echo "Please enter your Anthropic API key:"
+  read -s ANTHROPIC_API_KEY
+  
+  if [ -z "$ANTHROPIC_API_KEY" ]; then
+    echo "Error: API key is required"
+    exit 1
+  fi
+else
+  echo "Using ANTHROPIC_API_KEY from environment"
 fi
 
 # Create kind cluster with local kubeconfig
 echo "Creating kind cluster with local kubeconfig..."
-kind create cluster --name kagent-demo --kubeconfig kubeconfig.yaml
+kind create cluster --name kagent-demo --kubeconfig kubeconfig.yaml --config kind-config.yaml
 
 echo "Setting KUBECONFIG environment variable..."
 export KUBECONFIG=$(pwd)/kubeconfig.yaml
@@ -49,11 +53,16 @@ kubectl create secret generic anthropic-claude-3-7-sonnet-20250219 \
 
 # Apply the Argo CD Application
 echo "Creating Argo CD Application..."
-kubectl apply --filename apps/kagent-app.yaml
+export REPO_URL=$(git remote get-url origin)
+if [ -z "$REPO_URL" ]; then
+  echo "Warning: No git remote found. Please update repoURL in kagent-app.yaml manually."
+else
+  echo "Using git remote URL: $REPO_URL"
+  yq eval '.spec.source.repoURL = env(REPO_URL)' -i kagent-app.yaml
+fi
+kubectl apply --filename kagent-app.yaml
 
 echo "Setup complete!"
-echo ""
-echo "IMPORTANT: Update the repoURL in apps/kagent-app.yaml with your actual GitHub repository URL"
 echo ""
 echo "Access Argo CD UI:"
 echo "http://argocd.127.0.0.1.nip.io"

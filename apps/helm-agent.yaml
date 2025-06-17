@@ -3,6 +3,8 @@ kind: Agent
 metadata:
   name: helm
   namespace: kagent
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   description: Helm agent
   modelConfig: anthropic-claude-3-7-sonnet-20250219
