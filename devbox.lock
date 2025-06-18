@@ -257,6 +257,54 @@
         }
       }
     },
+    "nushell@0.104.1": {
+      "last_modified": "2025-06-10T02:39:58Z",
+      "resolved": "github:NixOS/nixpkgs/cdc68935eba9f86d155585fdf6f17af6824f38ac#nushell",
+      "source": "devbox-search",
+      "version": "0.104.1",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/ws4236zab95qi8v5j9a29k2z35b72bk6-nushell-0.104.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/ws4236zab95qi8v5j9a29k2z35b72bk6-nushell-0.104.1"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/lywq9ryghrpgk6y4lp75iyszvknq6lbn-nushell-0.104.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/lywq9ryghrpgk6y4lp75iyszvknq6lbn-nushell-0.104.1"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/09cg5psb5nm4lmsz0wzr0ml5w6p3i6hc-nushell-0.104.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/09cg5psb5nm4lmsz0wzr0ml5w6p3i6hc-nushell-0.104.1"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/llwc799j4y54cb1n8l4a45gkf8l4saw5-nushell-0.104.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/llwc799j4y54cb1n8l4a45gkf8l4saw5-nushell-0.104.1"
+        }
+      }
+    },
     "teller@2.0.7": {
       "last_modified": "2025-05-16T20:19:48Z",
       "resolved": "github:NixOS/nixpkgs/12a55407652e04dcf2309436eb06fef0d3713ef3#teller",

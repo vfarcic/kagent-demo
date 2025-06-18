@@ -6,7 +6,8 @@
     "kubectl@1.33.1",
     "kind@0.29.0",
     "git@2.49.0",
-    "yq-go@4.45.4"
+    "yq-go@4.45.4",
+    "nushell@0.104.1"
   ],
   "shell": {
     "init_hook": [],

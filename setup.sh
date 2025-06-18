@@ -2,7 +2,7 @@
 
 set -e
 
-echo "Setting up kagent demo with GitOps approach..."
+echo "Setting up kagent demo with direct installation..."
 
 # Get Anthropic API key (from env var or prompt)
 if [ -z "$ANTHROPIC_API_KEY" ]; then
@@ -28,14 +28,12 @@ export KUBECONFIG=$(pwd)/kubeconfig.yaml
 echo "Creating kagent namespace..."
 kubectl create namespace kagent --dry-run=client --output yaml | kubectl apply --filename -
 
-
-
 # Install NGINX Ingress Controller
 echo "Installing NGINX Ingress Controller..."
 kubectl apply --filename https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
 
 echo "Waiting for NGINX Ingress Controller to be ready..."
-kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=90s
+kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=300s
 
 # Install Argo CD
 echo "Installing Argo CD..."
@@ -51,19 +49,35 @@ kubectl create secret generic anthropic-claude-3-7-sonnet-20250219 \
   --from-literal=ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" \
   --namespace kagent
 
-# Apply the Argo CD Application
-echo "Creating Argo CD Application..."
-export REPO_URL=$(git remote get-url origin)
-if [ -z "$REPO_URL" ]; then
-  echo "Warning: No git remote found. Please update repoURL in apps-app.yaml manually."
-else
-  echo "Using git remote URL: $REPO_URL"
-  yq eval '.spec.source.repoURL = env(REPO_URL)' -i apps-app.yaml
-  yq eval '.spec.source.repoURL = env(REPO_URL)' -i bootstrap/00-kagent-crds.yaml
-  yq eval '.spec.source.repoURL = env(REPO_URL)' -i bootstrap/01-kagent-operator.yaml
-  yq eval '.spec.source.repoURL = env(REPO_URL)' -i bootstrap/02-manifests.yaml
-fi
-kubectl apply --filename apps-app.yaml
+# Install kagent using Helm directly
+echo "Adding kagent Helm repository..."
+helm repo add kagent https://vfarcic.github.io/kagent
+helm repo update
+
+echo "Installing kagent CRDs..."
+helm install kagent-crds kagent/kagent-crds --namespace kagent --create-namespace
+
+echo "Installing kagent operator..."
+helm install kagent-operator kagent/kagent --namespace kagent \
+  --set providers.anthropic.apiKeySecretRef=anthropic-claude-3-7-sonnet-20250219 \
+  --set providers.anthropic.apiKeySecretKey=ANTHROPIC_API_KEY
+
+echo "Waiting for kagent operator to be ready..."
+kubectl wait --for=condition=available --timeout=300s deployment/kagent-operator --namespace kagent
+
+# Apply kagent manifests directly
+echo "Applying kagent manifests..."
+kubectl apply --filename manifests/model-config.yaml
+kubectl apply --filename manifests/generic-agent.yaml
+kubectl apply --filename manifests/kubernetes-agent.yaml
+kubectl apply --filename manifests/helm-agent.yaml
+kubectl apply --filename manifests/context7-toolserver.yaml
+kubectl apply --filename manifests/kagent-ingress.yaml
+
+# Apply Argo CD ingress
+echo "Applying Argo CD ingress..."
+kubectl apply --filename manifests/argocd-ingress.yaml
+kubectl apply --filename manifests/argocd-server-patch.yaml
 
 echo "Setup complete!"
 echo ""
@@ -75,7 +89,6 @@ echo "Access kagent UI:"
 echo "http://kagent.127.0.0.1.nip.io"
 echo ""
 echo "Verify the setup:"
-echo "kubectl get applications --namespace argocd"
 echo "kubectl get agents --namespace kagent"
 echo "kubectl get modelconfigs --namespace kagent"
 echo ""
