@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: ghcr.io/kagent-dev/kagent/helm
+    repoURL: https://github.com/vfarcic/kagent-demo.git
     chart: kagent
     targetRevision: "*"
     helm:
@@ -25,4 +25,4 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true
