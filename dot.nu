@@ -4,6 +4,7 @@ source scripts/common.nu
 source scripts/kubernetes.nu
 source scripts/ingress.nu
 source scripts/argocd.nu
+source scripts/crossplane.nu
 
 def main [] {}
 
@@ -28,6 +29,8 @@ def "main setup" [] {
             --host-name $"argocd.($ingress_data.host)"
             --ingress-class-name $ingress_data.class
     )
+
+    main apply crossplane --provider $provider --app true --db true
 
     ##########
     # kagent #
@@ -73,14 +76,23 @@ def "main setup" [] {
             ingressClassName: $ingress_data.class
             rules: [{
                 host: $"kagent.($ingress_data.host)"
-                http: { paths: [{
-                    backend: { service: {
-                        name: kagent
-                        port: { number: 80 }
-                    } }
-                    path: "/"
-                    pathType: "Prefix"
-                }] }
+                http: { paths: [
+                    {
+                        backend: { service: {
+                            name: kagent
+                            port: { number: 8081 }
+                        } }
+                        path: "/api"
+                        pathType: "Prefix"
+                    }, {
+                        backend: { service: {
+                            name: kagent
+                            port: { number: 80 }
+                        } }
+                        path: "/"
+                        pathType: "Prefix"
+                    }
+                ] }
             }]
         }
     } | to yaml | kubectl --namespace kagent apply --filename -
@@ -93,7 +105,19 @@ def "main setup" [] {
 
     kubectl --namespace kagent apply --filename manifests/context7-toolserver.yaml
 
+    kubectl --namespace kagent apply --filename manifests/service-create-agent.yaml
+
+    kubectl --namespace kagent apply --filename manifests/service-observe-agent.yaml
+
+    kubectl --namespace kagent apply --filename manifests/service-delete-agent.yaml
+
+    kubectl --namespace kagent apply --filename manifests/kagent-crossplane-rbac.yaml
+
     kubectl --namespace kagent apply --filename manifests/generic-agent.yaml
+
+    kubectl create namespace a-team
+
+    kubectl create namespace b-team
     
     main print source
 

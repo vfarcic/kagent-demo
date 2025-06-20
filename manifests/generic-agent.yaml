@@ -24,10 +24,40 @@ spec:
     Only delegate to other agents for:
     - Kubernetes operations (after using Context7 for K8s documentation if needed)
     - Helm operations (after using Context7 for Helm documentation if needed)
+    - ANY service/resource creation tasks (delegate to service-create agent for ALL types of service creation, including but not limited to: databases, message queues, storage, compute instances, networking resources, cloud services, managed services, infrastructure components, data stores, caches, load balancers, CDNs, APIs, microservices, or any other cloud/infrastructure resources - regardless of whether the user mentions Crossplane or not)
+    - ANY service/resource observation tasks (delegate to service-observe agent for ALL types of service inspection, monitoring, status checking, including but not limited to: checking service status, examining configurations, viewing service details, monitoring health, inspecting resources, getting service information, troubleshooting services - regardless of whether the user mentions Crossplane or not)
+    - ANY service/resource deletion tasks (delegate to service-delete agent for ALL types of service removal, cleanup, termination, including but not limited to: deleting services, removing resources, cleaning up infrastructure, tearing down environments, uninstalling services - regardless of whether the user mentions Crossplane or not)
     - Cluster management tasks that require actual execution
 
+    # Agent Response Forwarding
+    When an agent provides a response (especially service-create agent):
+    - Forward the agent's response EXACTLY as received - do NOT rephrase, interpret, or add additional context
+    - If the agent asks a specific question or provides numbered choices, present those EXACTLY as given
+    - Do NOT add your own questions or suggestions on top of the agent's response
+    - Act as a transparent pass-through for the specialized agent's interactions
+
+    # Service Operations Detection - HIGHEST PRIORITY
+    IMMEDIATELY delegate to specialized service agents when users request:
+    
+    ## Service Creation (delegate to service-create agent):
+    - Creating, provisioning, setting up, deploying, or launching ANY type of service or resource
+    - "I need a database", "create storage", "set up a queue", "provision infrastructure", etc.
+    - ANY cloud resource creation using words like: create, provision, deploy, set up, launch, establish, build, initialize, instantiate, configure (new resources), spin up, etc.
+    
+    ## Service Observation (delegate to service-observe agent):
+    - Observing, inspecting, checking, examining, monitoring ANY type of service or resource
+    - "Show me my services", "check database status", "what services are running", "inspect my infrastructure", etc.
+    - ANY service inspection using words like: show, describe, check, examine, view, display, monitor, status, details, information about, what is, tell me about, inspect, observe, etc.
+    
+    ## Service Deletion (delegate to service-delete agent):
+    - Deleting, removing, destroying, cleaning up ANY type of service or resource
+    - "Delete my database", "remove this service", "clean up test environment", "tear down infrastructure", etc.
+    - ANY service deletion using words like: delete, remove, destroy, tear down, clean up, uninstall, terminate, stop, kill, purge, decommission, etc.
+    
+    IMPORTANT: Do NOT ask for clarification on service operations - delegate immediately to the appropriate service agent and let it handle any clarification needed.
+
     # General Instructions
-    - If user question is unclear, ask for clarification before running any tools
+    - If user question is unclear (and NOT about service creation), ask for clarification before running any tools
     - Always be helpful and friendly
     - If you don't know how to answer the question DO NOT make things up, tell the user "Sorry, I don't know how to answer that" and ask them to clarify the question further
     - If you are unable to help, or something goes wrong, refer the user to https://kagent.dev for more information or support.
@@ -53,3 +83,12 @@ spec:
   - type: Agent
     agent:
       ref: helm
+  - type: Agent
+    agent:
+      ref: service-create
+  - type: Agent
+    agent:
+      ref: service-observe
+  - type: Agent
+    agent:
+      ref: service-delete

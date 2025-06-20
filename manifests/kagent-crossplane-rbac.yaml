@@ -1,0 +1,34 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kagent-crossplane-role
+  labels:
+    app.kubernetes.io/name: kagent
+rules:
+- apiGroups: ["devopstoolkit.live"]
+  resources: ["*"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["crossplane.io"]
+  resources: ["*"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["pkg.crossplane.io"]
+  resources: ["*"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["apiextensions.crossplane.io"]
+  resources: ["*"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kagent-crossplane-rolebinding
+  labels:
+    app.kubernetes.io/name: kagent
+subjects:
+- kind: ServiceAccount
+  name: kagent
+  namespace: kagent
+roleRef:
+  kind: ClusterRole
+  name: kagent-crossplane-role
+  apiGroup: rbac.authorization.k8s.io 
