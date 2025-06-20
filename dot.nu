@@ -5,61 +5,104 @@ source scripts/kubernetes.nu
 source scripts/ingress.nu
 source scripts/argocd.nu
 
-def main [] {
+def main [] {}
+
+def "main setup" [] {
 
     let provider = main get provider
 
     main create kubernetes $provider
 
-    let ingress_class = "contour"
+    mut ingress_class = "contour"
     if $provider == "kind" {
-        let ingress_class = "nginx"
+        $ingress_class = "nginx"
     }
     let ingress_data = (
         main apply ingress $ingress_class --provider $provider
     )
 
+    sleep 10sec
+
     (
         main apply argocd
-            --host-name $ingress_data.host
-            --ingress-class-name $ingress_class
+            --host-name $"argocd.($ingress_data.host)"
+            --ingress-class-name $ingress_data.class
     )
 
-    # # Create namespace and install kagent
-    # echo "Creating kagent namespace..."
-    # kubectl create namespace kagent --dry-run=client --output yaml | kubectl apply --filename -
-            
-    # # Create API key secret
-    # echo "Creating Anthropic API key secret..."
-    # kubectl create secret generic anthropic-claude-3-7-sonnet-20250219 \
-    #   --from-literal=ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" \
-    #   --namespace kagent
+    ##########
+    # kagent #
+    ##########
+
+    (
+        helm upgrade --install kagent-crds
+            oci://ghcr.io/kagent-dev/kagent/helm/kagent-crds
+            --version 0.3.15
+            --namespace kagent --create-namespace --wait
+    )
     
-    # # Install kagent using Helm directly
-    # echo "Adding kagent Helm repository..."
-    # helm repo add kagent https://vfarcic.github.io/kagent
-    # helm repo update
+    (
+        helm upgrade --install kagent 
+            oci://ghcr.io/kagent-dev/kagent/helm/kagent
+            --version 0.3.15
+            --namespace kagent --create-namespace
+            --set providers.anthropic.apiKeySecretRef=anthropic
+            --set providers.anthropic.apiKeySecretKey=ANTHROPIC_API_KEY
+            --wait
+    )
+
+    mut anthropic_api_key = ""
+    if ANTHROPIC_API_KEY in $env {
+        $anthropic_api_key = $env.ANTHROPIC_API_KEY
+    } else {
+        $anthropic_api_key = input $"(ansi green_bold)Anthropic API Key: (ansi reset)"
+    }
+    $"export ANTHROPIC_API_KEY=($anthropic_api_key)\n"
+        | save --append .env
+
+    (
+        kubectl create secret generic anthropic
+            --from-literal $"ANTHROPIC_API_KEY=($anthropic_api_key)"
+            --namespace kagent
+    )
     
-    # echo "Installing kagent CRDs..."
-    # helm install kagent-crds kagent/kagent-crds --namespace kagent --create-namespace
+    {
+        apiVersion: "networking.k8s.io/v1"
+        kind: "Ingress"
+        metadata: { name: "kagent" }
+        spec: {
+            ingressClassName: $ingress_data.class
+            rules: [{
+                host: $"kagent.($ingress_data.host)"
+                http: { paths: [{
+                    backend: { service: {
+                        name: kagent
+                        port: { number: 80 }
+                    } }
+                    path: "/"
+                    pathType: "Prefix"
+                }] }
+            }]
+        }
+    } | to yaml | kubectl --namespace kagent apply --filename -
     
-    # echo "Installing kagent operator..."
-    # helm install kagent-operator kagent/kagent --namespace kagent \
-    #   --set providers.anthropic.apiKeySecretRef=anthropic-claude-3-7-sonnet-20250219 \
-    #   --set providers.anthropic.apiKeySecretKey=ANTHROPIC_API_KEY
-    
-    # echo "Waiting for kagent operator to be ready..."
-    # kubectl wait --for=condition=available --timeout=300s deployment/kagent-operator --namespace kagent
-    
-    # # Apply kagent manifests directly
-    # echo "Applying kagent manifests..."
-    # kubectl apply --filename manifests/model-config.yaml
-    # kubectl apply --filename manifests/generic-agent.yaml
-    # kubectl apply --filename manifests/kubernetes-agent.yaml
-    # kubectl apply --filename manifests/helm-agent.yaml
-    # kubectl apply --filename manifests/context7-toolserver.yaml
-    # kubectl apply --filename manifests/kagent-ingress.yaml
+    kubectl --namespace kagent apply --filename manifests/model-config.yaml
+
+    kubectl --namespace kagent apply --filename manifests/kubernetes-agent.yaml
+
+    kubectl --namespace kagent apply --filename manifests/helm-agent.yaml
+
+    kubectl --namespace kagent apply --filename manifests/context7-toolserver.yaml
+
+    kubectl --namespace kagent apply --filename manifests/generic-agent.yaml
     
     main print source
+
+}
+
+def "main destroy" [
+    provider: string
+] {
+
+    main destroy kubernetes $provider
 
 }

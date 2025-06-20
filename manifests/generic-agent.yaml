@@ -2,9 +2,6 @@ apiVersion: kagent.dev/v1alpha1
 kind: Agent
 metadata:
   name: generic
-  namespace: kagent
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
 spec:
   description: This is a generic agent that uses other agents to do the work.
   modelConfig: anthropic-claude-3-7-sonnet-20250219

@@ -2,12 +2,9 @@ apiVersion: kagent.dev/v1alpha1
 kind: ModelConfig
 metadata:
   name: anthropic-claude-3-7-sonnet-20250219
-  namespace: kagent
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
 spec:
   anthropic: {}
   apiKeySecretKey: ANTHROPIC_API_KEY
-  apiKeySecretRef: anthropic-claude-3-7-sonnet-20250219
+  apiKeySecretRef: kagent/anthropic
   model: claude-3-7-sonnet-20250219
   provider: Anthropic

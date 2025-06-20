@@ -1,5 +1,5 @@
 # Kubernetes configuration files (contain sensitive credentials)
-kubeconfig.yaml
+kubeconfig*.yaml
 *.kubeconfig
 
 # Temporary files

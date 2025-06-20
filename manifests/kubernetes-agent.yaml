@@ -2,9 +2,6 @@ apiVersion: kagent.dev/v1alpha1
 kind: Agent
 metadata:
   name: kubernetes
-  namespace: kagent
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
 spec:
   description: Kubernetes agent
   modelConfig: anthropic-claude-3-7-sonnet-20250219

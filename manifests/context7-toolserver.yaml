@@ -2,9 +2,6 @@ apiVersion: kagent.dev/v1alpha1
 kind: ToolServer
 metadata:
   name: context7-mcp
-  namespace: kagent
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
 spec:
   description: Context7 MCP server for up-to-date documentation
   config:

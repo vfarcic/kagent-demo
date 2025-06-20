@@ -35,10 +35,13 @@ def "main apply argocd" [
             ]
         }
     } | save argocd-values.yaml --force
+
+    helm repo add argo https://argoproj.github.io/argo-helm
+
+    helm repo update
   
     (
-        helm upgrade --install argocd argo-cd
-            --repo https://argoproj.github.io/argo-helm
+        helm upgrade --install argocd argo/argo-cd
             --namespace argocd --create-namespace
             --values argocd-values.yaml --wait
     )
