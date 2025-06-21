@@ -1,0 +1,13 @@
+apiVersion: kagent.dev/v1alpha1
+kind: ToolServer
+metadata:
+  name: github
+spec:
+  config:
+    streamableHttp:
+      headers:
+        Authorization: Bearer MY_TOKEN
+      sseReadTimeout: 5m0s
+      timeout: 5s
+      url: https://api.githubcopilot.com/mcp/
+  description: GitHub MCP
