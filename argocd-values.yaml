@@ -10,7 +10,7 @@ configs:
 server:
   ingress:
     enabled: true
-    ingressClassName: nginx
-    hostname: argocd.127.0.0.1.nip.io
+    ingressClassName: contour
+    hostname: argocd.52.55.169.154.nip.io
   extraArgs:
   - --insecure

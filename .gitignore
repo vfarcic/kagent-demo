@@ -31,3 +31,6 @@ Thumbs.db
 # Backup files
 *.bak
 *.backup
+
+# Creds
+aws-creds.conf

@@ -10,9 +10,11 @@ def main [] {}
 
 def "main setup" [] {
 
-    let provider = main get provider
+    let provider = (
+        main get provider --providers ['aws', 'azure', 'google', 'upcloud']
+    )
 
-    main create kubernetes $provider
+    main create kubernetes $provider --node-size medium
 
     mut ingress_class = "contour"
     if $provider == "kind" {
@@ -39,14 +41,12 @@ def "main setup" [] {
     (
         helm upgrade --install kagent-crds
             oci://ghcr.io/kagent-dev/kagent/helm/kagent-crds
-            --version 0.3.15
             --namespace kagent --create-namespace --wait
     )
     
     (
         helm upgrade --install kagent 
             oci://ghcr.io/kagent-dev/kagent/helm/kagent
-            --version 0.3.15
             --namespace kagent --create-namespace
             --set providers.anthropic.apiKeySecretRef=anthropic
             --set providers.anthropic.apiKeySecretKey=ANTHROPIC_API_KEY
@@ -120,6 +120,10 @@ def "main setup" [] {
     kubectl create namespace b-team
     
     main print source
+
+    print $"
+Open `(ansi yellow_bold)http://kagent.($ingress_data.host)(ansi reset)` in a browser to explore kagent Web UI.
+    "
 
 }
 

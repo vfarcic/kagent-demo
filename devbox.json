@@ -7,7 +7,13 @@
     "kind@0.29.0",
     "git@2.49.0",
     "yq-go@4.45.4",
-    "nushell@0.104.1"
+    "nushell@0.104.1",
+    "awscli2@2.27.2",
+    "aws-iam-authenticator@0.7.2",
+    "azure-cli@2.74.0",
+    "google-cloud-sdk@519.0.0",
+    "upcloud-cli@3.20.1",
+    "eksctl@0.210.0"
   ],
   "shell": {
     "init_hook": [],
