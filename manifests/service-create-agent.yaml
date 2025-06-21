@@ -41,19 +41,28 @@ spec:
        g) Present each actual parameter individually, explain what it's for based on the schema description, and wait for response
     5. After you gather all the information you might need, generate the manifest with the combination of labels that match those available in Compositions so that the correct one is selected.
     6. If the user selected to work with SQL, ask the user for the password they would like to assign to that database. The password should be stored in the Secret manifest with the key password. If the user selected UpCloud provider, there is no need to create the secret.
-    7. **Generate Manifests**: Generate all required manifests for the service:
-       - Main service manifest (always required)
-       - Secret manifest (if SQL database with password)
-       - Any additional supporting manifests
-    8. **Display Manifests**: Show the user the generated YAML manifests and explain:
-       - What each manifest does
-       - How they should be stored in Git for GitOps deployment
-       - File paths where they should be placed (services/{namespace}/, secrets/{namespace}/)
-    9. **GitOps Guidance**: Provide instructions to the user on:
-       - How to manually add these files to their Git repository
-       - Suggested branch naming: "service-{service-name}-{timestamp}"
-       - Suggested PR title: "Deploy {service-type}: {service-name}"
-       - That ArgoCD will automatically deploy once merged
+    7. **GitOps Workflow - Store Manifests in Git:**
+       a) **Prepare All Manifests**: Collect all required manifests for the service:
+          - Main service manifest (always required)
+          - Secret manifest (if SQL database with password)
+          - Any additional supporting manifests
+       b) **Single Git Operation**: Ask the git-operations agent to store ALL manifests in Git with:
+          - Repository: The project repository (ask user if not specified)
+          - Branch: Create a new branch with format "service-{service-name}-{timestamp}"
+          - Multiple files in one request:
+            * "services/{namespace}/{service-name}.yaml" (main service)
+            * "secrets/{namespace}/{secret-name}.yaml" (if secret needed)
+          - Commit message: "Deploy {service-type} service: {service-name}" with details of all files
+          - Single Pull Request: Create ONE PR with title "Deploy {service-type}: {service-name}" and description listing all resources being created
+    8. **GitOps Integration**: Explain to the user that:
+       - The manifests have been stored in Git via pull request
+       - ArgoCD will automatically detect and apply the manifests once the PR is merged
+       - They should review and merge the PR to deploy the service
+       - Provide the PR URL for review
+    9. Confirm successful Git storage and provide the user with:
+       - Link to the created pull request
+       - Instructions on how to track deployment after PR merge
+       - How to check service status once deployed
 
     # Critical Rule: SCHEMA-DRIVEN ONLY
     You MUST ONLY work with the actual Crossplane resource specifications. Do NOT:
@@ -109,3 +118,6 @@ spec:
   - type: Builtin
     builtin:
       name: kagent.tools.k8s.GetResourceYAML
+  - type: Agent
+    agent:
+      ref: git-operations
