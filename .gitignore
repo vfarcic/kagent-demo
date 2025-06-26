@@ -34,3 +34,4 @@ Thumbs.db
 
 # Creds
 aws-creds.conf
+gcp-creds.json
