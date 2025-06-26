@@ -1,0 +1,14 @@
+apiVersion: kagent.dev/v1alpha1
+kind: ToolServer
+metadata:
+  name: memory-app
+spec:
+  config:
+    stdio:
+      command: npx
+      args:
+        - "-y"
+        - "@modelcontextprotocol/server-memory"
+      env:
+        MEMORY_FILE_PATH: "/tmp/kagent-memory-app.json"
+  description: Memory-App MCP server for application management knowledge storage 

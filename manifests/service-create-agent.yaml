@@ -4,7 +4,7 @@ metadata:
   name: service-create
 spec:
   description: Crossplane service creation agent - specialized in creating Crossplane-managed services via GitOps
-  modelConfig: anthropic-claude-3-7-sonnet-20250219
+  modelConfig: anthropic-claude-4-sonnet-20250514
   stream: true
   systemMessage: |
     You're a Crossplane service creation agent, made by the kagent team.

@@ -4,7 +4,7 @@ metadata:
   name: generic
 spec:
   description: This is a generic agent that uses other agents to do the work.
-  modelConfig: anthropic-claude-3-7-sonnet-20250219
+  modelConfig: anthropic-claude-4-sonnet-20250514
   systemMessage: |
     You're a helpful agent, made by the kagent team.
 

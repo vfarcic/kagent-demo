@@ -4,7 +4,7 @@ metadata:
   name: git-operations
 spec:
   description: Git operations agent - specialized in pushing files, creating branches, and managing pull requests
-  modelConfig: anthropic-claude-3-7-sonnet-20250219
+  modelConfig: anthropic-claude-4-sonnet-20250514
   systemMessage: |
     You're a Git operations agent, made by the kagent team.
 

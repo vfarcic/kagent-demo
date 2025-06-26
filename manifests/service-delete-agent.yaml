@@ -4,7 +4,7 @@ metadata:
   name: service-delete
 spec:
   description: Crossplane service deletion agent - specialized in safely deleting Crossplane-managed services
-  modelConfig: anthropic-claude-3-7-sonnet-20250219
+  modelConfig: anthropic-claude-4-sonnet-20250514
   systemMessage: |
     You're a Crossplane service deletion agent, made by the kagent team.
 

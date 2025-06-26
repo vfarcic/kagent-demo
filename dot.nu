@@ -119,23 +119,27 @@ def "main setup" [] {
         }
     } | to yaml | kubectl --namespace kagent apply --filename -
 
-    kubectl --namespace kagent apply --filename manifests/git-operations-agent.yaml
+    # kubectl --namespace kagent apply --filename manifests/git-operations-agent.yaml
 
-    kubectl --namespace kagent apply --filename manifests/kubernetes-agent.yaml
+    # kubectl --namespace kagent apply --filename manifests/kubernetes-agent.yaml
 
-    kubectl --namespace kagent apply --filename manifests/helm-agent.yaml
+    # kubectl --namespace kagent apply --filename manifests/helm-agent.yaml
 
-    kubectl --namespace kagent apply --filename manifests/context7-toolserver.yaml
+    # kubectl --namespace kagent apply --filename manifests/context7-toolserver.yaml
 
-    kubectl --namespace kagent apply --filename manifests/service-create-agent.yaml
+    # kubectl --namespace kagent apply --filename manifests/service-create-agent.yaml
 
-    kubectl --namespace kagent apply --filename manifests/service-observe-agent.yaml
+    # kubectl --namespace kagent apply --filename manifests/service-observe-agent.yaml
 
-    kubectl --namespace kagent apply --filename manifests/service-delete-agent.yaml
+    # kubectl --namespace kagent apply --filename manifests/service-delete-agent.yaml
 
-    kubectl --namespace kagent apply --filename manifests/kagent-crossplane-rbac.yaml
+    # kubectl --namespace kagent apply --filename manifests/kagent-crossplane-rbac.yaml
 
-    kubectl --namespace kagent apply --filename manifests/generic-agent.yaml
+    kubectl --namespace kagent apply --filename manifests/memory-app-toolserver.yaml
+
+    kubectl --namespace kagent apply --filename manifests/manage-app.yaml
+
+    # kubectl --namespace kagent apply --filename manifests/generic-agent.yaml
 
     kubectl create namespace a-team
 

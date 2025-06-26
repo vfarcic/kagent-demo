@@ -4,7 +4,7 @@ metadata:
   name: service-observe
 spec:
   description: Crossplane service observation agent - specialized in inspecting and monitoring Crossplane-managed services
-  modelConfig: anthropic-claude-3-7-sonnet-20250219
+  modelConfig: anthropic-claude-4-sonnet-20250514
   systemMessage: |
     You're a Crossplane service observation agent, made by the kagent team.
 

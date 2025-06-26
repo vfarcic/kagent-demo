@@ -301,54 +301,6 @@
       "last_modified": "2025-06-01T15:36:18Z",
       "resolved": "github:NixOS/nixpkgs/5929de975bcf4c7c8d8b5ca65c8cd9ef9e44523e?lastModified=1748792178&narHash=sha256-BHmgfHlCJVNisJShVaEmfDIr%2FIp58i%2F4oFGlD1iK6lk%3D"
     },
-    "google-cloud-sdk@519.0.0": {
-      "last_modified": "2025-06-05T08:10:37Z",
-      "resolved": "github:NixOS/nixpkgs/ec62ae342c340d24289735e31eb9155261cd5fe7#google-cloud-sdk",
-      "source": "devbox-search",
-      "version": "519.0.0",
-      "systems": {
-        "aarch64-darwin": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/sjsqnhsw9mf69c97is3x1g2hyk8d91b9-google-cloud-sdk-519.0.0",
-              "default": true
-            }
-          ],
-          "store_path": "/nix/store/sjsqnhsw9mf69c97is3x1g2hyk8d91b9-google-cloud-sdk-519.0.0"
-        },
-        "aarch64-linux": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/kbplya767w1vf015bwagn9015y8v5i7r-google-cloud-sdk-519.0.0",
-              "default": true
-            }
-          ],
-          "store_path": "/nix/store/kbplya767w1vf015bwagn9015y8v5i7r-google-cloud-sdk-519.0.0"
-        },
-        "x86_64-darwin": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/a9pl8297h3z7369vbnrfxxbjvbzhk6a9-google-cloud-sdk-519.0.0",
-              "default": true
-            }
-          ],
-          "store_path": "/nix/store/a9pl8297h3z7369vbnrfxxbjvbzhk6a9-google-cloud-sdk-519.0.0"
-        },
-        "x86_64-linux": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/bla6vkb5yppipi3lldn6fxhjd23xx06v-google-cloud-sdk-519.0.0",
-              "default": true
-            }
-          ],
-          "store_path": "/nix/store/bla6vkb5yppipi3lldn6fxhjd23xx06v-google-cloud-sdk-519.0.0"
-        }
-      }
-    },
     "kind@0.29.0": {
       "last_modified": "2025-06-12T07:29:08Z",
       "resolved": "github:NixOS/nixpkgs/d202f48f1249f013aa2660c6733e251c85712cbe#kind",
