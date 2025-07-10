@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/vfarcic/kagent-demo
+    repoURL: https://github.com/vfarcic/kagent-demo.git
     targetRevision: HEAD
     path: apps
   destination:

@@ -104,20 +104,20 @@ def "main setup" [] {
 
     kubectl --namespace kagent apply --filename manifests/model-config.yaml
 
-    {
-        apiVersion: "kagent.dev/v1alpha1"
-        kind: "ToolServer"
-        metadata: { name: "github" }
-        spec: {
-            config: { streamableHttp: {
-                headers: { Authorization: $"Bearer ($github_data.token)" }
-                sseReadTimeout: "5m0s"
-                timeout: "5s"
-                url: "https://api.githubcopilot.com/mcp/"
-            } }
-            description: "GitHub MCP"
-        }
-    } | to yaml | kubectl --namespace kagent apply --filename -
+    # {
+    #     apiVersion: "kagent.dev/v1alpha1"
+    #     kind: "ToolServer"
+    #     metadata: { name: "github" }
+    #     spec: {
+    #         config: { streamableHttp: {
+    #             headers: { Authorization: $"Bearer ($github_data.token)" }
+    #             sseReadTimeout: "5m0s"
+    #             timeout: "5s"
+    #             url: "https://api.githubcopilot.com/mcp/"
+    #         } }
+    #         description: "GitHub MCP"
+    #     }
+    # } | to yaml | kubectl --namespace kagent apply --filename -
 
     # kubectl --namespace kagent apply --filename manifests/git-operations-agent.yaml
 
