@@ -53,6 +53,7 @@ def "main setup" [] {
         helm upgrade --install kagent 
             oci://ghcr.io/kagent-dev/kagent/helm/kagent
             --namespace kagent --create-namespace
+            --set providers.default=anthropic
             --set providers.anthropic.apiKeySecretRef=anthropic
             --set providers.anthropic.apiKeySecretKey=ANTHROPIC_API_KEY
             --wait
@@ -135,9 +136,9 @@ def "main setup" [] {
 
     # kubectl --namespace kagent apply --filename manifests/kagent-crossplane-rbac.yaml
 
-    kubectl --namespace kagent apply --filename manifests/memory-app-toolserver.yaml
+    # kubectl --namespace kagent apply --filename manifests/memory-app-toolserver.yaml
 
-    kubectl --namespace kagent apply --filename manifests/manage-app.yaml
+    # kubectl --namespace kagent apply --filename manifests/manage-app.yaml
 
     # kubectl --namespace kagent apply --filename manifests/generic-agent.yaml
 
